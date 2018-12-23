@@ -72,12 +72,12 @@ public class Driver {
     *   goes, and then runs the Universe forever.
     */
 
-   public static final Long ITERATIONS = 50000L;
-   public static final Long PRINT_EVERY = 1500L;
+   public static final Long ITERATIONS = 10L;
+   public static final Long PRINT_EVERY = 10L;
    public static final Integer SEED = new Random().nextInt(200000);
-   public static final Integer MAP_MIN_SIDE = 30;
-   public static final Integer MAP_MAX_SIDE = 50;
-   public static final Integer MAPS_QUANTITY = 10;
+   public static final Integer MAP_MIN_SIDE = 10;
+   public static final Integer MAP_MAX_SIDE = 10;
+   public static final Integer MAPS_QUANTITY = 5;
 
    public static void main(String[] args) throws Exception {
 
@@ -96,8 +96,8 @@ public class Driver {
    }
 
    private static Boolean[][] generateMap(Random random) {
-      int width = MAP_MIN_SIDE + random.nextInt(MAP_MAX_SIDE - MAP_MIN_SIDE);
-      int height = MAP_MIN_SIDE + random.nextInt(MAP_MAX_SIDE - MAP_MIN_SIDE);
+      int width = MAP_MIN_SIDE + random.nextInt(MAP_MAX_SIDE - MAP_MIN_SIDE + 1);
+      int height = MAP_MIN_SIDE + random.nextInt(MAP_MAX_SIDE - MAP_MIN_SIDE + 1);
 
       Boolean[][] map = new Boolean[height][width];
 
@@ -112,15 +112,15 @@ public class Driver {
    }
 
    private static long checkTime(Boolean[][] map, UniverseInterface univ, long iters) {
-//      System.out.println("Testing map for one ALG");
+//      System.out.println("Testing New Algorithm");
       loadMap(map, univ);
       long timeCurrent = System.currentTimeMillis();
       for (long i = 1; i <= iters; i++) {
          univ.runStep();
-         if (i % PRINT_EVERY == 0)
-            System.out.println(i + " / " + iters);
+//         System.out.println("Iteration " + i + ":");
+         System.out.println(univ.stats());
       }
-//      System.out.println("Testing map : DONE");
+//      System.out.println("Testing Algorithm : DONE");
       return System.currentTimeMillis() - timeCurrent;
    }
 
@@ -132,14 +132,16 @@ public class Driver {
 
    private static void testDriveMap(Boolean[][] map, long iterations) {
 
-      //UniverseInterface univTree = new TreeUniverse();
+
       UniverseInterface univHash = new HashLifeTreeUniverse();
       UniverseInterface univCanon = new CanonicalTreeUniverse();
       UniverseInterface univMemorized = new MemoizedTreeUniverse();
 
-      //long timeTree = checkTime(map, univTree, iterations);
+      System.out.println("========HASH=========");
       long timeHash = checkTime(map, univHash, iterations);
+      System.out.println("========CANON=========");
       long timeCanon = checkTime(map, univCanon, iterations);
+      System.out.println("========MEMO=========");
       long timeMemo = checkTime(map, univMemorized, iterations);
 
       System.out.println("------------------");
@@ -147,9 +149,9 @@ public class Driver {
       System.out.println("Iterations: " + iterations);
       System.out.println();
       //System.out.println("Tree = " + timeTree);
-      System.out.println("Canon = " + timeCanon);
-      System.out.println("Memo = " + timeMemo);
-      System.out.println("Hash = " + timeHash);
+      System.out.println("Hash = " + univHash.stats());
+      System.out.println("Canon = " + univCanon.stats());
+      System.out.println("Memo = " + univMemorized.stats());
 
    }
 

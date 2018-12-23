@@ -5,6 +5,8 @@
  *   well as how we construct the root object.
  */
 public class HashLifeTreeUniverse extends TreeUniverse {
+
+   @Override
    public void runStep() {
       while (root.level < 3 ||
              root.nw.population != root.nw.se.se.population ||
